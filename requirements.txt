@@ -1,0 +1,6 @@
+# Ficheiro requirements.txt
+discord.py
+requests
+beautifulsoup4
+python-dateutil
+python-dotenv
