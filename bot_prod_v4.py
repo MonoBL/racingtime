@@ -275,37 +275,54 @@ async def send_hour_race():
     #Carregar o json
     #config agora contem dicionarions no .json
     config=load_config()
-    print("Deleting old Msg")
+    print("[Debug] Deleting old Msg")
 
     #percore no json se tem um server_id ou um server_config
     for server_id, server_config in config.items():
+        print("[DEBUG] check server id: {server_id}")
+
         #vererifica se tem alguma msg 
         if 'last_message_id' in server_config:
+            print("[DEBU] 'last_message_id' para o servidor {server_id}")
             #se tiver pegamos na informação e guardamos em variaveis novas
             channel_id=server_config.get('notif_channel')
             msg_id=server_config.get('last_message_id')
 
             #verifica se tem mais uma vez se nao continua para o proximo server
             if not channel_id or not msg_id:
+                print("[DEBUG] channel_id missing for {server_id}. Skiping")
                 continue
 
-        
+            print("[DEBUG]Preparar para apagar {msg_id} no canal {channel_id}")
             #encontrar o canal e tentar apagar a msg
             #try para evitar erros:
             try:
+                print("[DEBUG] 1. Trying fetch")
                 #funcção que faz conexão a api do discord com a fução para ir buscar a o ID da msg enviada
-                channel=bot.fetch_channel(channel_id)
+                channel= await bot.fetch_channel(channel_id)
+
+                print("[DEBUG]2. canal {channel.name} trying fetch")
                 old_msg= await channel.fetch_message(msg_id)
+
+                print("[DEBUG] 3. msg encontrada")
                 #se encontrada apagamos
                 await old_msg.delete()
                 print(f"Msg apagada {msg_id}")
                 #apagar o last msg id para evitar que se tenta apgar depois outra vez e nao sobrecarregar o json
                 del config [server_id]['last_message_id']
                 
+                # Só apagamos a referência SE a mensagem foi apagada com sucesso.
+                if 'last_message_id' in config.get(server_id, {}):
+                    del config[server_id]['last_message_id']
+                    print(f"[DEBUG] Referência do ID {msg_id} removida do config.")
                 #se por algum motivo a msg ja foi apagada ou nao ecnontrada o expept evita erros e continua
+                
             except discord.NotFound:
                 print(f"Msg antiga nao encontrada {msg_id}")
-                 
+
+                # Se não foi encontrada, a mensagem já não existe, por isso podemos limpar a referência.
+                if 'last_message_id' in config.get(server_id, {}):
+                    del config[server_id]['last_message_id']
                 #se o bot nao tiver perms return a error 
             except discord.Forbidden:
                 print(f"Sem permissoes par ao canal {channel_id}")
