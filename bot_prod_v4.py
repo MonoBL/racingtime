@@ -278,6 +278,11 @@ async def send_hour_race():
     print("[Debug] Deleting old Msg")
 
     #percore no json se tem um server_id ou um server_config
+    #server_id e server_config sao variaveis para ojson 
+    #o for in vai separar os primeiros id para o server_id
+    # e o segudos valres dentro das {} para o server_config
+    # fica server ID"1418145274240569477":
+    #  fica server_config {"notification_channel": 1420142562139705474, ,last_msg ....},
     for server_id, server_config in config.items():
         print("[DEBUG] check server id: {server_id}")
 
@@ -316,7 +321,7 @@ async def send_hour_race():
                     del config[server_id]['last_message_id']
                     print(f"[DEBUG] Referência do ID {msg_id} removida do config.")
                 #se por algum motivo a msg ja foi apagada ou nao ecnontrada o expept evita erros e continua
-                
+
             except discord.NotFound:
                 print(f"Msg antiga nao encontrada {msg_id}")
 
