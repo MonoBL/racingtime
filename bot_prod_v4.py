@@ -290,7 +290,7 @@ async def send_hour_race():
         if 'last_message_id' in server_config:
             print("[DEBU] 'last_message_id' para o servidor {server_id}")
             #se tiver pegamos na informação e guardamos em variaveis novas
-            channel_id=server_config.get('notif_channel')
+            channel_id=server_config.get('notification_channel')
             msg_id=server_config.get('last_message_id')
 
             #verifica se tem mais uma vez se nao continua para o proximo server
