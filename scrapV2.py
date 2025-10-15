@@ -84,7 +84,6 @@ def info_lmu():
             #Loop procura duas div com o mesmo nome e que tenham dois span, e se o primeiro span bater o valor no if (duration) o segunda span vai ser o valor dado
 
             #encontrar todas as divs da pagina com o fonte no incio headers
-            #alteraç~oes
             fonte = item.find_all('div', class_='race-header d-flex justify-content-between align-items-center mb-1')
 
             #setup do valor de duracao e pista para default N/A para ser alterado depois
